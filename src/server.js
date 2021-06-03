@@ -1,57 +1,78 @@
 const express = require('express');
 const app = express();
-const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUI = require('swagger-ui-express');
 
-const swaggerOptions = {
-  swaggerDefinition: {
+const options = {
+  definition: {
+    openapi: '3.0.0',
     info: {
-      title: "Library API",
+      title: 'Strive Room Reservation',
       version: '1.0.0',
     },
   },
-  apis: ["server.js"],
+  apis: ["src/server.js"], // files containing annotations as above
 };
 
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+const openapiSpecification = swaggerJsdoc(options);
+
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(openapiSpecification));
 
 /**
  * @swagger
- * /books:
+ * /rooms:
  *   get:
- *     description: Get all books
+ *     description: Available room
+ *     responses:
+ *       200:
+ *         description: available for booking
+ * 
+ */
+app.get('/rooms', (req, res) => {
+  res.status(200).send(50, "rooms are avaiable");
+});
+
+/**
+ * @swagger
+ * /rooms:
+ *   post:
+ *     description: reserv a room
+ *     responses:
+ *       200:
+ *         description: reserved Successfully
+ * 
+ */
+
+app.post('/rooms', (req, res) => {
+  res.status(201).send(50, "rooms are avaiable");
+});
+
+/**
+ * @swagger
+ * /rooms:
+ *   delete:
+ *     description: Delete reservation
+ *     responses:
+ *       200:
+ *         description: Deleted
+ * 
+ */
+
+app.delete('/rooms', (req, res) => {
+  res.status(201).send("room reservation has been cancelled");
+});
+/**
+ * @swagger
+ * /rooms:
+ *   put:
+ *     description: Get your booking
  *     responses:
  *       200:
  *         description: Success
  * 
  */
-app.get('/books', (req, res) => {
-  res.send([
-    {
-      id: 1,
-      title: "Harry Potter",
-    }
-  ])
-});
-
-/**
- * @swagger
- * /books:
- *   post:
- *     description: Get all books
- *     parameters:
- *      - name: title
- *        description: title of the book
- *        in: formData
- *        required: true
- *        type: string
- *     responses:
- *       201:
- *         description: Created
- */
-app.post('/books', (req, res) => {
-  res.status(201).send();
+app.put('/rooms', (req, res) => {
+  res.status(201).send("you have successfully update the informatinon");
 });
 
 app.listen(3000, () => console.log("listening on 3000"));
